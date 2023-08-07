@@ -1,0 +1,98 @@
+<template>
+    <div class="body-view">
+        <table class="detail">
+            <tr v-for="i in 4">
+                <td class="img-container"><img
+                        src="https://baonamdinh.vn/file/e7837c02816d130b0181a995d7ad7e96/dataimages/202201/original/images1338206_1.jpg"
+                        alt=""></td>
+                <td>Rau sach</td>
+                <td>₫1.045.000</td>
+                <td>
+                    <input class="number" type="number">
+                </td>
+                <td>₫3.135.000</td>
+                <td>
+                    <Button name="Xoa"></Button>
+                </td>
+            </tr>
+        </table>
+        <div class="total">
+            <p>Tong thanh toan: 1000</p>
+            <router-link to="/chooseAddress">
+                <Button name="Mua hang">
+                </Button>
+            </router-link>
+        </div>
+    </div>
+</template>
+
+<script>
+import Input from '../components/Input.vue';
+import Button from '../components/Button.vue';
+export default {
+    components: {
+        Button,
+        Input
+    },
+    data() {
+        return {
+
+        }
+    },
+    props: {
+
+    },
+    methods: {
+
+    }
+}
+</script>
+
+<style scoped>
+@import '../assets/style.css';
+.cart {
+    display: block;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 20%;
+    background-color: white;
+    box-shadow: 0 0 10px 2px #3333331a;
+}
+
+.detail {
+    width: 100%;
+}
+
+.total {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-container {
+    overflow: hidden;
+    width: 100px;
+    height: 100px;
+}
+
+.number {
+    width: 100px;
+}
+
+tr {
+    height: 100px;
+    margin: 20px;
+    padding: 20px;
+}
+
+td {
+    width: 100px;
+    margin: 20px;
+}
+
+img {
+    width: 100%;
+    max-height: 100%;
+    display: block;
+    margin: auto;
+}</style>
