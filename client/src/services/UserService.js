@@ -1,11 +1,19 @@
 import Api from "@/services/Api"
-
+    // : user.name,
+    //       email: user.email,
+    //       phone: user.phone,
+    //       address: user.address,
+    //       role: user.role,
+    //       id: user
 export default {
-    register(name, email, password) {
+    register(name, email, phone, address, password) {
         const userData = {
-            "username": name,
+            "name": name,
             "email": email,
-            "password": password
+            "phone": phone, 
+            "address": address,
+            "password": password,
+
         };
         return Api().post('users/register', userData).
         then( response => {

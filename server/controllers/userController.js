@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
-
+const Address = require("../models/addressModel");
 
 //@desc Register a user
 //@route POST /api/users/register
@@ -30,10 +30,12 @@ const registerUser = asyncHandler(async (req, res) => {
   console.log(`User created ${user}`);
   if (user) {
     const userAddress = await Address.create({
-      address: address.address,
+      address: address,
       user: user._id,
     });
     if (userAddress) {
+      user.addresses.push(userAddress)
+      await user.save();
       res.status(201).json({ _id: user.id, email: user.email });
     } else {
       res.status(400);
@@ -64,9 +66,9 @@ const loginUser = asyncHandler(async (req, res) => {
           name: user.name,
           email: user.email,
           phone: user.phone,
-          address: user.address,
+          address: user.addresses,
           role: user.role,
-          id: user.id,
+          id: user._id,
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
@@ -79,8 +81,9 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-const logoutUser = asyncHandler(async (req, res) => {
-
+const getUsers = asyncHandler(async (req, res) => {
+  const users = await User.find();
+  res.status(200).json(users);
 })
 
 //@desc Current user info
@@ -90,4 +93,4 @@ const currentUser = asyncHandler(async (req, res) => {
   res.json(req.user);
 });
 
-module.exports = { registerUser, loginUser, currentUser };
+module.exports = { registerUser, loginUser, currentUser, getUsers };

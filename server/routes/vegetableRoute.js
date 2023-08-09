@@ -8,6 +8,7 @@ updateVegetable,
 deleteVegetable
 } = require("../controllers/vegetablesController")
 const validateToken = require("../middleware/validateTokenHandler");
+// const {validateToken,authorization} = require("../middleware/validateTokenHandler");
 const authorization = (role) => {
     return (req, res, next) => {
         if (req.user.role !== role) {
