@@ -7,8 +7,19 @@ createVegetable,
 updateVegetable,
 deleteVegetable
 } = require("../controllers/vegetablesController")
-
-router.route('/').get(getVegetables).post(createVegetable)
-router.route('/:id').get(getVegetable).put(updateVegetable).delete(deleteVegetable)
-
+const validateToken = require("../middleware/validateTokenHandler");
+const authorization = (role) => {
+    return (req, res, next) => {
+        if (req.user.role !== role) {
+            res.status(403).json({ message: "User is not authorized for this action" });;
+        }
+        next();
+    };
+};
+router.use(validateToken)
+router.get('/', getVegetables);
+router.post('/', authorization('admin'), createVegetable);
+router.get('/:id', getVegetable);
+router.put('/:id', authorization('admin'), updateVegetable);
+router.delete('/:id', authorization('admin'), deleteVegetable);
 module.exports = router

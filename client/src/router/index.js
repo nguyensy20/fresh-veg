@@ -38,6 +38,10 @@ const router = createRouter({
       path: '/vegetables',
       name: 'vegetables',
       component: ListVegs,
+      meta: {
+        requiresAdminuth: true,
+        requiredRoles: ['admin'] 
+      }
     },
     {
       path: '/productDetail',
@@ -71,5 +75,24 @@ const router = createRouter({
     },
   ]
 })
-
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // Check if user is authenticated
+    if (!store.getters.isAuthenticated) {
+      next({
+        path: '/',
+        query: { redirect: to.fullPath }, // Preserve the intended route
+      });
+    } else {
+      // Check if user has the necessary role/permissions for the route
+      if (to.matched.some(record => record.meta.requiresAdmin && !store.getters.isAdmin)) {
+        next({ path: '/' });
+      } else {
+        next();
+      }
+    }
+  } else {
+    next();
+  }
+});
 export default router

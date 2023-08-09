@@ -1,5 +1,6 @@
 <template>
-    <input :type="customType" :id="customId" :placeholder="customPlaceholder"/>
+    <input :value="value" :type="customType" :id="customId" :placeholder="customPlaceholder"
+        @input="updateValue($event.target.value)" />
 </template>
 
 <script>
@@ -14,7 +15,13 @@ export default {
     props: {
         placeholder: String,
         type: String,
-        id: String
+        id: String,
+        value: String
+    },
+    methods: {
+        updateValue(newValue) {
+            this.$emit('update:value', newValue);
+        }
     }
 }
 </script>

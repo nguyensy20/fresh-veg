@@ -3,6 +3,7 @@ const Vegetable = require("../models/vegetableModel");
 
 
 const getVegetables =asyncHandler(async (req, res) => {
+    console.log("get vegetables")
     const vegetables =await Vegetable.find();
     res.status(200).json(vegetables);
 })

@@ -4,33 +4,35 @@
             <h1>Login Page</h1>
         </div>
         <div class="input">
-            <InputPH id="name" type="text" placeholder="Name"></InputPH>
+            <input id="email" type="text" v-model="email" placeholder="Email ">
         </div>
         <div class="input">
-            <InputPH id="password" type="password" placeholder="Password"></InputPH>
+            <input id="password" type="password" v-model="password" placeholder="Password">
         </div>
         <div class="button">
-            <Button name="Send" :method="method"></Button>
+            <Button name="Send" @click="login"></Button>
         </div>
     </div>
 </template>
 <script>
-import InputPH from '../components/InputPH.vue'
 import Button from '../components/Button.vue'
+import UserService from '../services/UserService'
 export default {
     components: {
-        InputPH,
         Button
     },
     data() {
         return {
-            method() {
-                console.log("Login");
-            }
+            email: '',
+            password: '',
         }
     },
     methods: {
-
+        async login() {
+            console.log(this.email, this.password)
+            const res = await UserService.loginUser(this.email, this.password)
+            console.log(res)
+        }
     }
 }
 </script>
@@ -38,10 +40,11 @@ export default {
 @import '../assets/style.css';
 
 .body-view {
-    margin:5% 35%;
+    margin: 5% 35%;
     height: 300px;
     background-color: rgb(19, 99, 19);
 }
+
 .header {
     display: flex;
     align-items: center;
@@ -60,4 +63,5 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-}</style>
+}
+</style>
