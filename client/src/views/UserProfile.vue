@@ -4,53 +4,52 @@
         <table>
             <tr>
                 <td><label for="name">Name: </label></td>
-                <td><input id="name" type="text" v-model="name"></td>
+                <td><input id="name" type="text" v-model="user['name']"></td>
             </tr>
             <tr>
                 <td><label for="phone">Phone: </label></td>
-                <td> <input id="phone" type="text" v-model="phone"></td>
+                <td> <input id="phone" type="text" v-model="user['phone']"></td>
             </tr>
             <tr>
                 <td><label for="email">Email: </label></td>
-                <td><input id="email" type="text" v-model="email"></td>
+                <td><input id="email" type="text" v-model="user['email']"></td>
             </tr>
         </table>
+        <Button name="View all address" @click="viewAddress"></Button>
     </div>
 </template>
 
 <script>
 import UserService from '../services/UserService'
+import Button from '../components/Button.vue'
+import AddressService from '../services/AddressService'
 export default {
+    components: {
+        Button
+    },
     data() {
         return {
-            name: '',
-            email: '',
-            phone: '',
-            address: '',
+            user: {},
+            addresses: [],
         }
     },
-    props: {
-
-    },
-    components: {
-    },
     methods: {
-
+        viewAddress() {
+            this.$router.push({name: "address"})
+        }
     },
     async mounted() {
-        const user = await UserService.getUserProfile()
-        this.name = user.name,
-        this.email = user.email,
-        this.phone = user.phone,
-        this.address = user.address
+        const res = await UserService.getUserProfile()
+        this.user = res
     }
 }
 </script>
 
 <style scoped>
 @import '../assets/style.css';
+
 .body-view {
-    margin:0 35%;
+    margin: 0 35%;
     height: 300px;
     background-color: rgb(255, 255, 255);
 }

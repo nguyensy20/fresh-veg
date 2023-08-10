@@ -1,17 +1,26 @@
 <template>
-    <div>
-        <h1>Register</h1>
-        <input id="name" type="text" v-model="name"
-            placeholder="Name"> 
-        <input id="email" type="text" v-model="email"
-            placeholder="Email"> 
-        <input id="phone" type="text" v-model="phone"
-            placeholder="Phone"> 
-        <input id="address" type="text" v-model="address"
-            placeholder="Address"> 
-        <input id="password" type="password" v-model="password"
-            placeholder="Password"> 
-        <Button name="Register" @click="register"></Button>
+    <div class="body-view">
+        <div class="form">
+            <h1  class="header">Register</h1>
+            <div class="input">
+                <input id="name" type="text" v-model="name" placeholder="Name">
+            </div>
+            <div class="input">
+                <input id="phone" type="text" v-model="phone" placeholder="Phone">
+            </div>
+            <div class="input">
+                <input id="address" type="text" v-model="address" placeholder="Address">
+            </div>
+            <div class="input">
+                <input id="password" type="password" v-model="password" placeholder="Password">
+            </div>
+            <div class="input">
+                <input id="email" type="text" v-model="email" placeholder="Email">
+            </div>
+            <div class="button" >
+                <Button name="Register" @click="register"></Button>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -45,4 +54,32 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+@import '../assets/style.css';
+
+.body-view {
+    margin: 1% 35%;
+    height: 400px;
+    background-color: rgb(19, 99, 19);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input {
+    margin: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>

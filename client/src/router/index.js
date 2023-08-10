@@ -8,9 +8,9 @@ import ProductDetail from '../views/ProductDetail.vue'
 import Cart from '../views/Cart.vue'
 import ChooseAddress from '../views/ChooseAddress.vue'
 import Confirm from '../views/Confirm.vue'
-import AddAddress from '../views/AddAddress.vue'
 import History from '../views/History.vue'
-
+import ListAddress from '../views/ListAddress.vue'
+import AddressDetail from '../views/AddressDetail.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -60,9 +60,9 @@ const router = createRouter({
       component: ChooseAddress,
     },
     {
-      path: '/addAddress',
-      name: 'addAddress',
-      component: AddAddress,
+      path: '/address/detail/:itemId?',
+      name: 'addressDetail',
+      component: AddressDetail,
     },
     {
       path: '/confirm',
@@ -73,6 +73,11 @@ const router = createRouter({
       path: '/history',
       name: 'history',
       component: History,
+    },
+    {
+      path: '/address',
+      name: 'address',
+      component: ListAddress,
     },
   ]
 })

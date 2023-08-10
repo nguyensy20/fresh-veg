@@ -31,7 +31,6 @@ export default {
         async login() {
             console.log(this.email, this.password)
             const res = await UserService.loginUser(this.email, this.password)
-            console.log(res)
         }
     }
 }
@@ -40,7 +39,7 @@ export default {
 @import '../assets/style.css';
 
 .body-view {
-    margin: 5% 35%;
+    margin: 1% 35%;
     height: 300px;
     background-color: rgb(19, 99, 19);
 }

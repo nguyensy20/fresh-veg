@@ -14,7 +14,7 @@ export default {
     },
     
     getCompleteCart() {
-        return Api.get('cart/conplete').then(response => response.data)
+        return Api.get('cart/complete').then(response => response.data)
     },
 
     chooseAddress (addressId) {

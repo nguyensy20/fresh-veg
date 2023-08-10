@@ -31,21 +31,14 @@ const addAddressForLoggedInUser = asyncHandler(async (req, res) => {
     }
 });
 const updateAddressForLoggedInUser = asyncHandler(async (req, res) => {
-    const userId = req.user.id; // Assuming you have the user ID from authentication
     const addressId = req.params.id; // Assuming address ID is passed in the URL
-    const { address } = req.body;
-
     try {
-        // Find the address by ID and user to ensure ownership
-        const addressToUpdate = await Address.findOne({ _id: addressId, user: userId });
-
-        if (!addressToUpdate) {
-            return res.status(404).json({ message: 'Address not found' });
-        }
-        // Update the address data
-        addressToUpdate.address = address;
-        await addressToUpdate.save();
-
+        console.log("update")
+        addressToUpdate = await Address.findByIdAndUpdate(
+            addressId,
+            req.body,
+            {new: true}
+        );
         res.status(200).json(addressToUpdate);
     } catch (error) {
         res.status(400).json({ message: 'Failed to update address' });

@@ -19,7 +19,7 @@ const getActiveCartsByUserId = asyncHandler(async (userId) => {
     return activeCarts[0];
 });
 const getCompleteCartsByUserId = asyncHandler(async (userId) => {
-    const carts = await Cart.find({ user: userId, status: 'complete' });
+    const carts = await Cart.find({ user: userId, status: 'completed' });
     return carts;
 });
 

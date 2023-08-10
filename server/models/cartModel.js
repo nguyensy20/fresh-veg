@@ -39,6 +39,9 @@ const cartSchema = mongoose.Schema({
         enum: ['active', 'completed'],
         default: 'active',
     },
-});
+},
+    {
+        timestamps: true,
+    });
 
 module.exports = mongoose.model('Cart', cartSchema);

@@ -20,8 +20,8 @@ const authorization = (role) => {
 };
 router.use(validateToken)
 router.get('/', getAddressesUser);
-router.post('/', authorization('customer'), addAddressForLoggedInUser)
 router.get('/:id', authorization('customer'), getAddressByIdForLoggedInUser);
+router.post('/', authorization('customer'), addAddressForLoggedInUser)
 router.put('/:id', authorization('customer'), updateAddressForLoggedInUser);
 router.delete('/:id', authorization('customer'), deleteAddressForLoggedInUser);
 module.exports = router

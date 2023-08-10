@@ -1,6 +1,7 @@
 <template>
     <nav class="nav-bar" v-if="!isShow()">   
         <router-link :style="stylelink" class="custom link"  to="/login">Login</router-link>
+        <router-link :style="stylelink" class="custom link"  to="/register">Register</router-link>
         <router-link :style="stylelink" to="/">Home</router-link>
         <router-link :style="stylelink" to="/userProfile">User Profile</router-link>
         <router-link :style="stylelink" to="/vegetables">List Vegetables</router-link>
