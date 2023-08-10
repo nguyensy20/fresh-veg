@@ -14,6 +14,7 @@ app.use(errorHandler)
 app.use("/users", require("./routes/userRoutes"))
 app.use("/vegetables", require("./routes/vegetableRoute"))
 app.use("/address", require("./routes/addressRoutes"))
+app.use("/cart", require("./routes/cartRoutes"))
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

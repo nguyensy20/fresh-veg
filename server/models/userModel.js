@@ -29,6 +29,12 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, "Please add the user role"],
     },
+    carts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cart',
+      },
+    ],
   },
   {
     timestamps: true,

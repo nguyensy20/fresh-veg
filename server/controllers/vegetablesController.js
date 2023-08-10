@@ -40,6 +40,7 @@ const updateVegetable =asyncHandler (async(req, res) => {
         {new: true}
         
     );
+    await updateItems(req.params.id, newPrice);
     res.status(200).json(updatedVegetable);
 });
 const deleteVegetable = asyncHandler(async(req, res) => {
