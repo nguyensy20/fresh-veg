@@ -17,6 +17,10 @@ const vegetableScheme = mongoose.Schema({
         type: String, 
         require: [true, "Please add the vegetable unit"],
     },
+    imgSrc: {
+        type: String, 
+        require: [true, "Please add the vegetable unit"],
+    },
 }, {
     timestamps: true,
 });

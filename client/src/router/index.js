@@ -44,9 +44,10 @@ const router = createRouter({
       }
     },
     {
-      path: '/productDetail',
-      name: 'productDetail',
+      path: '/vegetables/detail/:itemId?',
+      name: 'vegetableDetail',
       component: ProductDetail,
+      props: true,
     },
     {
       path: '/cart',

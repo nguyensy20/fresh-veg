@@ -1,19 +1,21 @@
 <template>
     <div class="product-list">
-        <ProductTag v-for="i in 8" src="https://baonamdinh.vn/file/e7837c02816d130b0181a995d7ad7e96/dataimages/202201/original/images1338206_1.jpg"
-        name="rau sach" class="tag"
-        ></ProductTag>
+        <ProductTag v-for="veg in vegetables"
+            :src="veg['imgSrc']" :id="veg['_id']"
+            :name="veg['name']" class="tag" :price="veg['price']"></ProductTag>
     </div>
 </template>
 
-<script> 
+<script>
 import ProductTag from '../components/ProductTag.vue';
-export default{
+import VegetableService from '../services/VegetableService'; // Adjust the import path
+export default {
     components: {
         ProductTag,
     },
     data() {
         return {
+            vegetables: []
         }
     },
     methods: {
@@ -21,6 +23,10 @@ export default{
             console.log("not ok");
         },
     },
+    async mounted() {
+        const data = await VegetableService.getVegetables();
+        this.vegetables = data
+    }
 }
 </script>
 <style scoped>
@@ -39,5 +45,4 @@ export default{
     margin-right: 10px;
     margin-top: 10px;
 }
-
 </style>

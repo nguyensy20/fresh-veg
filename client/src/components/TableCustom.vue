@@ -2,16 +2,16 @@
     <table>
         <thead>
             <tr>
-                <th v-for="column in columns">{{ column }}</th>
+                <th v-for="column in columns" :key="column">{{ column }}</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(item, index) in data" :key="index">
-                <td v-for="(value, key) in item" :key="key">{{ value }}</td>
+            <tr v-for="item in dataTable" >
+                <td  v-for="(value, key) in item" >{{(value)}}</td>
                 <td id="action">
-                    <Button name="Edit" @click="gotoEdit"></Button>
-                    <Button name="Delete" @click="deleteItem" ></Button>
+                    <Button name="Edit" @click="gotoEdit(item)"></Button>
+                    <Button name="Delete" @click="deleteItem()" ></Button>
                 </td>
             </tr>
         </tbody>
@@ -20,17 +20,19 @@
 
 <script>
 import Button from '../components/Button.vue'
+import VegetableService from '../services/VegetableService';
 export default {
-    data() {
-        return {
-        }
-    },
     methods: {
-        gotoEdit() {
-            console.log("Edit item");
+        gotoEdit(item) {
+            this.$router.push({ name: 'ProductDetail', params: { item: time } });
+
         },
-        deleteItem() {
-            console.log("Delete item");
+        async deleteItem(id) {
+            await VegetableService.deleteVegetable(id) 
+        },
+        isIdField(field) {
+            console.log(field)
+            return field=='_id'
         }
     },
     props: {
@@ -39,12 +41,15 @@ export default {
     },
     components: {
         Button
-    }
+    }, 
 }
 </script>
 
 <style scoped>
 #action {
     display: flex;
+}
+th {
+    text-align: start;
 }
 </style>

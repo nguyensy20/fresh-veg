@@ -1,23 +1,24 @@
 <template>
     <div class="body-view">
         <table class="detail">
-            <tr v-for="i in 4">
+            <tr v-for="item in items">
                 <td class="img-container"><img
                         src="https://baonamdinh.vn/file/e7837c02816d130b0181a995d7ad7e96/dataimages/202201/original/images1338206_1.jpg"
                         alt=""></td>
-                <td>Rau sach</td>
-                <td>₫1.045.000</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.price }}đ</td>
                 <td>
-                    <input class="number" type="number">
+                    <!-- <input type="number "> -->
+                    <input class="number" type="number" v-model="item.quantity" />
                 </td>
-                <td>₫3.135.000</td>
+                <td>{{ item.price * item.quantity }}đ</td>
                 <td>
                     <Button name="Xoa"></Button>
                 </td>
             </tr>
         </table>
         <div class="total">
-            <p>Tong thanh toan: 1000</p>
+            <p>Tong thanh toan: {{ calculateTotalPayment() }}</p>
             <router-link to="/chooseAddress">
                 <Button name="Mua hang">
                 </Button>
@@ -27,29 +28,47 @@
 </template>
 
 <script>
-import Input from '../components/Input.vue';
+// import Input from '../components/Input.vue';
 import Button from '../components/Button.vue';
+import CartService from '../services/CartService';
 export default {
     components: {
         Button,
-        Input
     },
     data() {
         return {
-
+            items: [],
+            
         }
     },
     props: {
 
     },
+    computed: {
+        totalPayment() {
+            return this.item.quantity * this.item.price;
+        },
+    },
     methods: {
-
+        calculateTotalPayment() {
+            var totals = 0
+            this.items.forEach((item) => {
+                totals += item.quantity * item.price
+            })
+            return totals
+        },
+    },
+    async mounted() {
+        const res = await CartService.getActiveCart()
+        this.items = res.items
+        console.log(res)
     }
 }
 </script>
 
 <style scoped>
 @import '../assets/style.css';
+
 .cart {
     display: block;
     align-items: center;
@@ -95,4 +114,5 @@ img {
     max-height: 100%;
     display: block;
     margin: auto;
-}</style>
+}
+</style>

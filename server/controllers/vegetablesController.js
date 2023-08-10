@@ -9,13 +9,13 @@ const getVegetables =asyncHandler(async (req, res) => {
 })
 const createVegetable =  asyncHandler(async  (req, res) => {
     console.log(req.body)
-    const {name, price, quantity, unit} = req.body
-    if (!name || !price || !quantity || !unit) {
+    const {name, price, quantity, unit, imgSrc} = req.body
+    if (!name || !price || !quantity || !unit || !imgSrc) {
         res.status(400);
         throw new Error("All feild are mandatory")
     }
     const vegetable =  await Vegetable.create({
-        name, price, quantity, unit
+        name, price, quantity, unit, imgSrc
     });
 
     res.status(200).json(vegetable);

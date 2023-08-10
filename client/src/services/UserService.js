@@ -28,12 +28,25 @@ export default {
             "email": email,
             "password": password
         };
-        return Api().post('users/login', userData).
+        return Api.post('users/login', userData).
         then( response => {
             console.log('User registered successfully:', response.data);
+            const token = response.data.accessToken;
+            localStorage.setItem('jwtToken', token);
         })
         .catch(error => {
             console.error('Registration failed:', error);
+        });
+    },
+    getUserProfile() {
+        return Api.get('users/current').
+        then(response => {
+            console.log('Get user successfully: ', response.data)
+            return response.data
+        })
+        .catch(error => {
+            console.error('Registration failed:', error);
+            throw error
         });
     }
 }

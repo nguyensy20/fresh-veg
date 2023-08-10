@@ -1,62 +1,96 @@
 <template>
     <div class="product-tag">
-        <img :src="imgSrc" :alt="imgAlt">
+        <div class="img-container">
+            <img :src="src" :alt="name">
+        </div>
         <div class="detail">
             <div class="header">
-                <h1>{{ productName }}</h1>
+                <table>
+                    <tr>
+                        <td class="name">{{ name }}</td>
+                        <td class="price">{{ price }}đ</td>
+                    </tr>
+                </table>
             </div>
             <div class="body">
-                <InputPH class="number" type="number"></InputPH>
-                <Button class="add" name="Add" @click="addToCart"></Button>
+                <input class="number" type="number" v-model="quantity">
+                <Button class="add" name="Add" @click="addToCart(id, this.quantity)"></Button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import InputPH from './InputPH.vue';
 import Button from './Button.vue';
+import CartService from '../services/CartService';
 export default {
     components: {
-        InputPH,
         Button,
     },
     data() {
         return {
-            imgSrc: this.src,
-            imgAlt: this.name,
-            productName: this.name,
+            quantity: ''
         }
     },
     props: {
         src: String,
         name: String,
+        price: Number,
+        id: String, 
     },
     methods: {
-        addToCart() {
-            console.log("Add to card");
+        async addToCart(vegetableId, quantity) {
+            console.log(vegetableId, quantity)
+            const res =await CartService.addToCart(vegetableId, quantity)
+            console.log(res)
         }
     }
 }
 </script>
 
-<style scoped>
+<style>
 .product-tag {
-    max-width: 200px;
-    max-height: 250px;
-}
-.product-tag img{
-    width: 100%;
-}
-.number {
-    max-width: 150px;
-}
-.add {
-    width: 50px;
-}
-.body {
-    display: flex;
-    /* width: 100%; */
 }
 
-</style>
+.img-container {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    width: 100%;
+    height: 150px;
+}
+
+.img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Adjust to "contain" or "cover" depending on your preference */
+}
+
+.number {
+    max-width: 70%;
+}
+
+.add {
+    width: 30%;
+    height: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.name {
+    text-align: left;
+}
+
+.price {
+    text-align: right;
+    color: rgb(219, 117, 0);
+}
+
+.body {
+    display: flex;
+    height: 30px;
+}</style>

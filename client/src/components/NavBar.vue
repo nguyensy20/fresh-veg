@@ -4,7 +4,6 @@
         <router-link :style="stylelink" to="/">Home</router-link>
         <router-link :style="stylelink" to="/userProfile">User Profile</router-link>
         <router-link :style="stylelink" to="/vegetables">List Vegetables</router-link>
-        <router-link :style="stylelink" to="/productDetail">Product Detail</router-link>
         <router-link :style="stylelink" to="/cart">Cart</router-link>
         <router-link :style="stylelink" to="/history">History</router-link>
     </nav>
@@ -14,7 +13,7 @@
 export default {
     data() {
         return {
-            ListNotShow : ['/login', '/register'],
+            ListNotShow : [],
             stylelink : "color: white; text-decoration: none; margin: 10px"
         }
     },

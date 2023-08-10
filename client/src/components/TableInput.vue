@@ -1,12 +1,12 @@
 <template>
     <table>
-        <tr v-for="feild in feilds" :key="feild.key">
-            <td><label :for="id">{{ feild.label }}</label></td>
-            <td><input :type="feild.type" :id="feild.key" /></td>
+        <tr v-for="field in fields" :key="field.key">
+            <td><label :for="field.key">{{ field.label }}</label></td>
+            <td><input :type="field.type" :id="field.key" v-model="formData[field.key]"/></td>
         </tr>
         <tr>
             <td></td>
-            <td><Button name="Save" type="submit" @click="executeMethod"></Button></td>
+            <td><Button name="Save" type="submit" @click="save"></Button></td>
         </tr>
     </table>
 </template>
@@ -17,20 +17,23 @@ export default {
     components: {
         Button,
     },
+    props: {
+        fields: Array,
+        executeMethod: Function,
+        formData: Object
+    },
     data() {
         return {
-            customId: this.id,
-            customType: this.type,
-        }
-    },
-    props: {
-        feilds: Array,
-        executeMethod: Function,
+            formData: {},
+            fields: this.fields,
+        };
     },
     methods: {
-
-    }
-}
+        save() {
+            this.executeMethod(this.formData);
+        },
+    },
+};
 </script>
 
 <style scoped>

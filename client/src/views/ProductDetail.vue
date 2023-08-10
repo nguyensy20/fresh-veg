@@ -1,41 +1,90 @@
 <template>
     <div class="detail">
         <div class="left">
-            <img src="https://baonamdinh.vn/file/e7837c02816d130b0181a995d7ad7e96/dataimages/202201/original/images1338206_1.jpg"
-                alt="">
+            <!-- <img :src="inputFields.find(field => field.key === 'imgSrc').value" alt=""> -->
         </div>
         <div class="right">
-            <TableInput :feilds="inputFields" :execute-method="save"></TableInput>
+            <table>
+                <tr v-for="field in inputFields" :key="field.key">
+                    <td><label :for="field.key">{{ field.label }}</label></td>
+                    <td><input :type="field.type" :id="field.key" v-model="item[field.key]" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><Button name="Save" type="submit" @click="save"></Button></td>
+                </tr>
+            </table>
         </div>
     </div>
 </template>
 
 <script>
 import Input from '../components/Input.vue';
-import TableInput from '../components/TableInput.vue';
+// import TableInput from '../components/TableInput.vue';
+import Button from '../components/Button.vue';
+import VegetableService from '../services/VegetableService';
 export default {
     components: {
         Input,
-        TableInput,
+        Button,
+        // TableInput,
     },
     data() {
         return {
             inputFields: [
-                { key: 'username', label: 'Username', type: 'text', value: '' },
-                { key: 'phone', label: 'Phone', type: 'text', value: ''},
-                { key: 'password', label: 'Password', type: 'password', value: ''},
-                // Add more fields as needed
+                { key: 'name', label: 'Name', type: 'text' },
+                { key: 'price', label: 'Price', type: 'number' },
+                { key: 'quantity', label: 'Quantity', type: 'number' },
+                { key: 'unit', label: 'Unit', type: 'text' },
+                { key: 'imgSrc', label: 'Img Src', type: 'text' },
             ],
+            item: {}
         }
-    },
-    props: {
-
     },
     methods: {
-        save() {
-            console.log("Save product detail");
+        async save() {
+            try {
+                console.log("add thís item: ",this.item)
+                if (this.item._id) {
+                    await VegetableService.updateVegetable(this.item._id, this.item)
+                } else {
+                    const res = await VegetableService.addVegetable(this.item);
+                    console.log(res)
+                }
+                this.$router.push('/vegetables'); // Send the data to the server
+            } catch (error) {
+                console.error('Error adding vegetable:', error);
+            }
+        },
+        async updateVegetable(formData) {
+            try {
+                // Use this.item.id to identify the specific item for updating
+                await VegetableService.updateVegetable(this.item.id, formData);
+                this.$router.push('/list-product'); // Navigate back to the list
+            } catch (error) {
+                console.error('Error updating vegetable:', error);
+            }
+        },
+        async fetchProductData(itemId) {
+            try {
+                if (itemId) {
+                    console.log(itemId)
+                    // Fetch data from the API based on the itemId
+                    const response = await VegetableService.getVegetableById(itemId);
+                    this.item = response; // Update product data
+                    console.log(this.item)
+                }
+            } catch (error) {
+                console.error('Error fetching product data:', error);
+            }
+        },
+    },
+    async mounted() {
+        if (this.$route.params.itemId) {
+            await this.fetchProductData(this.$route.params.itemId);
         }
-    }
+        // Fetch data for the item based on the route parameter
+    },
 }
 </script>
 
@@ -60,4 +109,5 @@ export default {
 .right {
     left: 50%;
     width: 50%;
-}</style>
+}
+</style>

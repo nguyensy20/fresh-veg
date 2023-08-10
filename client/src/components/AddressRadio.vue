@@ -1,16 +1,15 @@
 <template>
     <div class="address">
         <div class="left">
-            <input class="radio" type="radio" name="address" :id="id">
+            <input class="radio" :value="id" type="radio" name="address" :id="id" v-model="selectedAddressId">
         </div>
         <div class="right">
             <div class="header">
-                <h4>Nguyễn Tiến Sỹ</h4>
-                <h4>012314563</h4>
+                <h4>{{ receiver }}</h4>
+                <h4>{{ phone }}</h4>
             </div>
             <div class="body">
-                <p>Bất Động Sản Thành Phát Quang, Thạch Thất, Thôn 8
-                    Xã Thạch Hòa, Huyện Thạch Thất, Hà Nội</p>
+                <p>{{ address }}</p>
             </div>
         </div>
 
@@ -19,20 +18,22 @@
 
 <script>
 export default {
-    components: {
-
-    },
     data() {
         return {
-            id: this.id
-        }
+            selectedAddressId: null,
+        };
+    },
+    watch: {
+        selectedAddressId(newValue) {
+            this.$emit('addressSelected', newValue);
+        },
     },
     props: {
-        id: String
+        id: String,
+        address: String,
+        receiver: String,
+        phone: String
     },
-    methods: {
-
-    }
 }
 </script>
 
@@ -41,10 +42,12 @@ export default {
     background-color: white;
     display: flex;
 }
+
 .radio {
     width: 20px;
     height: 20px;
 }
+
 .left {
     width: 5%;
 }
@@ -58,8 +61,8 @@ export default {
     height: 2rem;
     align-items: center;
 }
+
 .header h4 {
     margin-right: 10px;
     height: 2rem;
-}
-</style>
+}</style>

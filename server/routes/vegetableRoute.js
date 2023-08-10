@@ -13,7 +13,9 @@ const authorization = (role) => {
     return (req, res, next) => {
         if (req.user.role !== role) {
             res.status(403).json({ message: "User is not authorized for this action" });;
+            throw Error("User is not authorized for this action")
         }
+        console.log(req.user.role)
         next();
     };
 };
@@ -24,3 +26,4 @@ router.get('/:id', getVegetable);
 router.put('/:id', authorization('admin'), updateVegetable);
 router.delete('/:id', authorization('admin'), deleteVegetable);
 module.exports = router
+

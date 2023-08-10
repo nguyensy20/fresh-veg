@@ -25,10 +25,10 @@ const getCompleteCartsByUserId = asyncHandler(async (userId) => {
 
 const getActiveCart = asyncHandler(async (req, res) => {
     const userId = req.user.id;
-    const activeCart = getActiveCartsByUserId(userId)
-    console.log("ok")
+    const activeCart =await getActiveCartsByUserId(userId)
+    console.log("get active cart ")
     console.log(activeCart)
-    res.status(200).json(activeCart[0])
+    res.status(200).json(activeCart)
 })
 const getCompleteCart = asyncHandler(async (req, res) => {
     const userId = req.user.id;
@@ -38,13 +38,15 @@ const getCompleteCart = asyncHandler(async (req, res) => {
 
 const addToCart = asyncHandler(async (req, res) => {
     const userId = req.user.id;
+    res.status(200).json({iserId: userId})
     const { vegetableId, quantity } = req.body;
     const user = await User.findById(userId);
     if (!user) {
         res.status(404).json({ message: 'User not found' });
         throw new Error("User not found")
     }
-    activeCart = await getActiveCartsByUserId(req, res)
+    console.log("ok")
+    activeCart = await getActiveCartsByUserId(userId)
     if (!activeCart) {
         activeCart = await createCartForUser(userId)
     }
