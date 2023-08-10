@@ -25,6 +25,13 @@ http://localhost:5001/vegetables/64d3596431013608328835e1
 {
     "price":""
 }
-
+http://localhost:5001/vegetables/
+{
+    "name":"a",
+    "price":"1",
+    "quantity":"2",
+    "unit":"3",
+    "imgSrc":"a"
+}
 
 
