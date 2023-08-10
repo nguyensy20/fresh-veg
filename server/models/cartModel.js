@@ -31,6 +31,9 @@ const cartSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Address',
     },
+    total: {
+        type: Number,
+    },
     status: {
         type: String,
         enum: ['active', 'completed'],

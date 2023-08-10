@@ -14,156 +14,157 @@ const createCartForUser = async (userId) => {
     return cart;
 };
 
-const getCartById = async (cartId) => {
-    const cart = await Cart.findById(cartId);
-    return cart;
-};
+const getActiveCartsByUserId = asyncHandler(async (userId) => {
+    const activeCarts = await Cart.find({ user: userId, status: 'active' });
+    return activeCarts[0];
+});
+const getCompleteCartsByUserId = asyncHandler(async (userId) => {
+    const carts = await Cart.find({ user: userId, status: 'complete' });
+    return carts;
+});
 
-const getActiveCartsByUserId = async (userId) => {
-    try {
-        const activeCarts = await Cart.find({ user: userId, status: 'active' });
-        return activeCarts[0];
-    } catch (error) {
-        throw new Error('Failed to retrieve active carts');
-    }
-};
+const getActiveCart = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+    const activeCart = getActiveCartsByUserId(userId)
+    console.log("ok")
+    console.log(activeCart)
+    res.status(200).json(activeCart[0])
+})
+const getCompleteCart = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+    const completeCart = await getCompleteCartsByUserId(userId)
+    res.status(200).json(completeCart)
+})
 
-const addToCart = async (req, res) => {
+const addToCart = asyncHandler(async (req, res) => {
     const userId = req.user.id;
     const { vegetableId, quantity } = req.body;
-
-    try {
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        activeCart = await getActiveCartsByUserId(userId)
-        if (!activeCart) {
-            activeCart = await createCartForUser(userId)
-        }
-        const vegetable = await Vegetable.findById(vegetableId);
-        if (!vegetable) {
-            return res.status(404).json({ message: 'Vegetable not found' });
-        }
-        const vegetableBeAdd = await Vegetable.findById(vegetableId);
-        if (!vegetableBeAdd) {
-            return res.status(404).json({ message: 'Vegetable not found' });
-        }
-        // Check if the vegetable already exists in the cart
-        const existingCartItem = activeCart.items.find(item => item.vegetable.toString() === vegetableId);
-        if (existingCartItem) {
-            // Update the quantity of the existing item
-            const quantityToAdd = parseInt(quantity, 10);
-            existingCartItem.quantity += quantityToAdd;
-            console.log("add2")
-            vegetable.quantity -= quantityToAdd;
-            await activeCart.save();
-            await vegetable.save();
-        } else {
-            const quantityToAdd = parseInt(quantity, 10);
-            // Add a new cart item
-            console.log(vegetableBeAdd)
-            const cartItem = {
-                vegetable: vegetableId,
-                quantityToAdd,
-                price: vegetableBeAdd.price,
-                unit: vegetableBeAdd.unit
-            };
-            activeCart.items.push(cartItem);
-            console.log(activeCart)
-            console.log("add1")
-            vegetable.quantity -= quantityToAdd;
-            await vegetable.save();
-            await activeCart.save();
-        }
-        res.status(200).json({ message: 'Item added to cart' });
-    } catch (error) {
-        res.status(400).json({ message: 'Failed to add item to cart' });
+    const user = await User.findById(userId);
+    if (!user) {
+        res.status(404).json({ message: 'User not found' });
+        throw new Error("User not found")
     }
-};
+    activeCart = await getActiveCartsByUserId(req, res)
+    if (!activeCart) {
+        activeCart = await createCartForUser(userId)
+    }
+    const vegetableBeAdd = await Vegetable.findById(vegetableId);
+    if (!vegetableBeAdd) {
+        res.status(404).json({ message: 'Vegetable not found' });
+        throw new Error("Vegetable not found")
+    }
+    // Check if the vegetable already exists in the cart
+    const quantityToAdd = parseInt(quantity, 10);
+    if (quantityToAdd > vegetableBeAdd.quantity) {
+        res.status(400).json({ message: "Not enough item" })
+        throw new Error("Not enough item")
+    }
+    const existingCartItem = activeCart.items.find(item => item.vegetable.toString() === vegetableId);
+    if (existingCartItem) {
+        // Update the quantity of the existing item
+        existingCartItem.quantity += quantityToAdd;
+        console.log("add2")
+        vegetableBeAdd.quantity -= quantityToAdd;
+        await activeCart.save();
+        await vegetableBeAdd.save();
+    } else {
+        // Add a new cart item
+        const cartItem = {
+            vegetable: vegetableId,
+            quantity: quantityToAdd,
+            price: vegetableBeAdd.price,
+            unit: vegetableBeAdd.unit
+        };
+        activeCart.items.push(cartItem);
+        console.log(activeCart)
+        console.log("add1")
+        vegetableBeAdd.quantity -= quantityToAdd;
+        await vegetableBeAdd.save();
+        await activeCart.save();
+    }
+    res.status(200).json({ message: 'Item added to cart' });
+});
 
-
-const chooseAddressForCart = async (req, res) => {
+const chooseAddressForCart = asyncHandler(async (req, res) => {
     const userId = req.user.id;
     const { addressId } = req.body;
-
-    try {
-        const user = await User.findById(userId);
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Ensure the user has an active cart with items
-        if (!user.cart || user.cart.status !== 'active' || user.cart.items.length === 0) {
-            return res.status(400).json({ message: 'No active cart with items to choose from' });
-        }
-
-        user.cart.chosenAddress = addressId;
-        await user.save();
-
-        res.status(200).json({ message: 'Address chosen for cart' });
-    } catch (error) {
-        res.status(400).json({ message: 'Failed to choose address for cart' });
+    const user = await User.findById(userId);
+    if (!user) {
+        res.status(404).json({ message: 'User not found' });
+        throw new Error("User not found")
     }
-};
+    // Ensure the user has an active cart with items
+    const activeCart = await getActiveCartsByUserId(userId)
+    if (!activeCart || activeCart.items.length === 0) {
+        res.status(400).json({ message: 'No active cart with items to choose from' });
+        throw new Error("User not found")
+    }
+    activeCart.chosenAddress = addressId;
+    res.status(200).json({ message: 'Address chosen for cart' });
+    await activeCart.save();
+});
 
-const completePurchase = async (req, res) => {
+const completePurchase = asyncHandler(async (req, res) => {
     const userId = req.user.id;
-
-    try {
-        const user = await User.findById(userId);
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Calculate total cost for the cart based on items' quantity and price
-        const total = user.cart.items.reduce(
-            (total, item) => total + item.quantity * item.price,
-            0
-        );
-        // Subtract purchased quantity from items in the Vegetable collection
-        for (const item of user.cart.items) {
-            const vegetable = item.vegetable;
-            if (vegetable) {
-                vegetable.quantity -= item.quantity;
-                await vegetable.save();
-            }
-        }
-        // Set the status of the current cart to 'completed'
-        user.cart.total = total;
-        user.cart.status = 'completed';
-
-        // Create a new cart for the user
-        user.carts.push(await createCartForUser(userId)); // Create and add a new cart
-
-        await user.save();
-
-        res.status(200).json({ message: 'Purchase completed and new cart created' });
-    } catch (error) {
-        res.status(400).json({ message: 'Failed to complete purchase' });
+    const user = await User.findById(userId);
+    if (!user) {
+        res.status(404).json({ message: 'User not found' });
+        throw new Error("User not found")
     }
-};
+    const activeCart = await getActiveCartsByUserId(userId)
+    // Calculate total cost for the cart based on items' quantity and price
+    const total = activeCart.items.reduce(
+        (total, item) => total + item.quantity * item.price,
+        0
+    );
+    // Set the status of the current cart to 'completed'
+    activeCart.total = total;
+    activeCart.status = 'completed';
+    // Create a new cart for the user
+    await createCartForUser(userId); // Create and add a new cart
+    await activeCart.save();
+    res.status(200).json({ message: 'Purchase completed and new cart created' });
+});
 
-const updateItems = async (vegetableId, newPrice) => {
-    try {
-        const carts = await Cart.find({ status: 'active', 'items.vegetable': vegetableId });
-
-        for (const cart of carts) {
-            const cartItem = cart.items.find((item) => item.vegetable.toString() === vegetableId);
-            if (cartItem) {
-                cartItem.price = newPrice;
-            }
-            await cart.save();
+const updateItemsPrice = asyncHandler(async (vegetableId, newName, newPrice, newUnit) => {
+    const carts = await Cart.find({ status: 'active', 'items.vegetable': vegetableId });
+    for (const cart of carts) {
+        const cartItem = cart.items.find((item) => item.vegetable.toString() === vegetableId);
+        if (cartItem) {
+            cartItem.name = newName;
+            cartItem.price = newPrice;
+            cartItem.unit = newUnit;
         }
-    } catch (error) {
-        throw new Error('Failed to update cart items');
+        await cart.save();
     }
-};
+});
+
+// const updateItemsQuantity = asyncHandler(async (req, res) => {
+//     const userId = req.user.id
+//     const activeCart = getActiveCartsByUserId(userId)
+//     if (!activeCart) {
+//         res.status(400).json('Ca')
+//         throw new Error('Cart not found');
+//     }
+//     const items = req.body
+//     // Update the quantity of items based on the itemList
+//     itemList.forEach(itemToUpdate => {
+//         const cartItem = cart.items.find(item => item.vegetable.toString() === itemToUpdate.vegetableId);
+//         if (cartItem) {
+//             cartItem.quantity = itemToUpdate.quantity;
+//         }
+//     });
+
+//     // Save the updated cart
+//     await cart.save();
+// });
+
 
 module.exports = {
+    getActiveCart,
+    getCompleteCart,
     addToCart,
     chooseAddressForCart,
     completePurchase,
+    updateItemsPrice
 };

@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Vegetable = require("../models/vegetableModel");
-
+const {updateItemsPrice} = require("../controllers/cartController")
 
 const getVegetables =asyncHandler(async (req, res) => {
     console.log("get vegetables")
@@ -38,9 +38,8 @@ const updateVegetable =asyncHandler (async(req, res) => {
         req.params.id,
         req.body,
         {new: true}
-        
     );
-    await updateItems(req.params.id, newPrice);
+    await updateItemsPrice(req.params.id, req.body.name, req.body.price, req.body.unit);
     res.status(200).json(updatedVegetable);
 });
 const deleteVegetable = asyncHandler(async(req, res) => {
