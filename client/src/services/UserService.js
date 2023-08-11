@@ -6,16 +6,8 @@ import Api from "@/services/Api"
     //       role: user.role,
     //       id: user
 export default {
-    register(name, email, phone, address, password) {
-        const userData = {
-            "name": name,
-            "email": email,
-            "phone": phone, 
-            "address": address,
-            "password": password,
-
-        };
-        return Api().post('users/register', userData).
+    register(userData) {
+        return Api.post('users/register', userData).
         then( response => {
             console.log('User registered successfully:', response.data);
         })
@@ -48,5 +40,8 @@ export default {
             console.error('Registration failed:', error);
             throw error
         });
+    },
+    udpateProfile(userData) {
+        return Api.put(`users/`, userData).then(response => response.data)
     }
 }

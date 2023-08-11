@@ -49,8 +49,6 @@ export default {
 </script>
 
 <style>
-.product-tag {
-}
 
 .img-container {
     display: flex;

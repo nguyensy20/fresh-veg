@@ -16,6 +16,7 @@
             </tr>
         </table>
         <Button name="View all address" @click="viewAddress"></Button>
+        <Button name="Save" @click="save"></Button>
     </div>
 </template>
 
@@ -35,8 +36,12 @@ export default {
     },
     methods: {
         viewAddress() {
-            this.$router.push({name: "address"})
-        }
+            this.$router.push({ name: "address" })
+        },
+        async save() {
+            const res =await UserService.udpateProfile(this.user)
+            console.log(res)
+        },
     },
     async mounted() {
         const res = await UserService.getUserProfile()

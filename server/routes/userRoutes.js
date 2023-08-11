@@ -3,7 +3,8 @@ const {
   registerUser,
   currentUser,
   loginUser,
-  getUsers
+  getUsers,
+  updateUser
 } = require("../controllers/userController");
 const validateToken = require("../middleware/validateTokenHandler");
 const authorization = (role) => {
@@ -25,4 +26,5 @@ router.get("/current", validateToken, currentUser);
 
 router.get("/", validateToken, authorization("admin"),  getUsers)
 
+router.put("/", validateToken, updateUser)
 module.exports = router;

@@ -3,19 +3,19 @@
         <div class="form">
             <h1  class="header">Register</h1>
             <div class="input">
-                <input id="name" type="text" v-model="name" placeholder="Name">
+                <input id="name" type="text" v-model="user['name']" placeholder="Name">
             </div>
             <div class="input">
-                <input id="phone" type="text" v-model="phone" placeholder="Phone">
+                <input id="phone" type="text" v-model="user['phone']" placeholder="Phone">
             </div>
             <div class="input">
-                <input id="address" type="text" v-model="address" placeholder="Address">
+                <input id="address" type="text" v-model="user['address']" placeholder="Address">
             </div>
             <div class="input">
-                <input id="password" type="password" v-model="password" placeholder="Password">
+                <input id="password" type="password" v-model="user['password']" placeholder="Password">
             </div>
             <div class="input">
-                <input id="email" type="text" v-model="email" placeholder="Email">
+                <input id="email" type="text" v-model="user['email']" placeholder="Email">
             </div>
             <div class="button" >
                 <Button name="Register" @click="register"></Button>
@@ -27,24 +27,14 @@
 import Button from '../components/Button.vue'
 import UserService from '../services/UserService'
 export default {
-    // : user.name,
-    //       email: user.email,
-    //       phone: user.phone,
-    //       address: user.address,
-    //       role: user.role,
-    //       id: user
     data() {
         return {
-            name: '',
-            email: '',
-            phone: '',
-            address: '',
-            password: '',
+            user: {}
         }
     },
     methods: {
         async register() {
-            const res = await UserService.register(this.name, this.email, this.phone, this.address, this.password)
+            const res = await UserService.register(this.user)
             console.log(res)
         }
     },

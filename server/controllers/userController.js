@@ -93,4 +93,14 @@ const currentUser = asyncHandler(async (req, res) => {
   res.json(req.user);
 });
 
-module.exports = { registerUser, loginUser, currentUser, getUsers };
+const updateUser = asyncHandler(async (req, res) => {
+  console.log("update profile")
+  userToUpdate = await User.findByIdAndUpdate(
+      req.user.id,
+      req.body,
+      {new: true}
+  );
+  res.status(200).json(userToUpdate);
+})
+
+module.exports = { registerUser, loginUser, currentUser, getUsers, updateUser };
