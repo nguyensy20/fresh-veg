@@ -25,7 +25,7 @@ const getCompleteCartsByUserId = asyncHandler(async (userId) => {
 
 const getActiveCart = asyncHandler(async (req, res) => {
     const userId = req.user.id;
-    const activeCart =await getActiveCartsByUserId(userId)
+    const activeCart = await getActiveCartsByUserId(userId)
     console.log("get active cart ")
     console.log(activeCart)
     res.status(200).json(activeCart)
@@ -38,7 +38,7 @@ const getCompleteCart = asyncHandler(async (req, res) => {
 
 const addToCart = asyncHandler(async (req, res) => {
     const userId = req.user.id;
-    res.status(200).json({iserId: userId})
+    res.status(200).json({ iserId: userId })
     const { vegetableId, quantity } = req.body;
     const user = await User.findById(userId);
     if (!user) {
@@ -141,6 +141,24 @@ const updateItemsPrice = asyncHandler(async (vegetableId, newName, newPrice, new
     }
 });
 
+const removeItem = asyncHandler(async (req, res) => {
+    const userId = req.user.id
+    const { vegetable } = req.body // Replace with the actual vegetable ID
+    console.log(req.body)
+    console.log(userId, vegetable)
+    const updatedCart = await Cart.findOneAndUpdate(
+        { user: userId, status: 'active' },
+        { $pull: { items: { vegetable: vegetable } } },
+        { new: true }
+    );
+    updatedCart.save()
+    if (!updatedCart) {
+        console.log('Cart not found or item not removed.');
+        return;
+    }
+    console.log('Item removed from cart:', updatedCart);
+    res.status(200).json({ message: 'Item removed from cart' });
+})
 // const updateItemsQuantity = asyncHandler(async (req, res) => {
 //     const userId = req.user.id
 //     const activeCart = getActiveCartsByUserId(userId)
@@ -168,5 +186,6 @@ module.exports = {
     addToCart,
     chooseAddressForCart,
     completePurchase,
-    updateItemsPrice
+    updateItemsPrice,
+    removeItem
 };

@@ -29,8 +29,13 @@ export default {
     },
     methods: {
         async login() {
-            console.log(this.email, this.password)
             const res = await UserService.loginUser(this.email, this.password)
+            if (res) {
+                // alert("Login successful");
+                this.$router.push('/')
+            } else {
+                alert("Login failed")
+            }
         }
     }
 }

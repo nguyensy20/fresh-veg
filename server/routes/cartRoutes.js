@@ -6,6 +6,7 @@ const {
     addToCart,
     chooseAddressForCart,
     completePurchase,
+    removeItem
 } = require("../controllers/cartController")
 const validateToken = require("../middleware/validateTokenHandler");
 // const {validateToken,authorization} = require("../middleware/validateTokenHandler");
@@ -21,7 +22,8 @@ const authorization = (role) => {
 router.use(validateToken)
 router.get('/active', authorization('customer'), getActiveCart)
 router.get('/complete', authorization('customer'), getCompleteCart)
-router.post('/add',authorization('customer'), addToCart);
+router.post('/add', authorization('customer'), addToCart);
+router.post('/remove', authorization('customer'), removeItem);
 router.post('/choose-address', authorization('customer'), chooseAddressForCart)
 router.post('/complete-purchase', authorization('customer'), completePurchase);
 module.exports = router

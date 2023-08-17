@@ -9,6 +9,7 @@
             <div class="right">
                 <div class="header">
                     <h4>{{ address.receiver }}</h4>
+                    <h4>-</h4>
                     <h4>{{ address.phone }}</h4>
                 </div>
                 <div class="body">
@@ -49,7 +50,7 @@ export default {
         async confirm() {
             if (this.selectedAddressId !== null) {
                 console.log(this.selectedAddressId)
-                const res =await CartService.chooseAddress(this.selectedAddressId)
+                const res = await CartService.chooseAddress(this.selectedAddressId)
                 console.log(res)
             } else {
                 console.warn('No address selected.');
@@ -77,6 +78,20 @@ export default {
     background-color: white;
     margin: 10px 20%;
 }
+
+.address {
+    display: flex;
+    border: solid black 1px;
+    border-radius: 5px;
+    margin-top: 10px;
+
+}
+
+.address .left {
+    display: flex;
+    align-items: center;
+}
+
 
 .navigator {
     display: flex;

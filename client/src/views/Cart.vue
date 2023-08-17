@@ -1,10 +1,8 @@
 <template>
     <div class="body-view">
         <table class="detail">
-            <tr v-for="item in items">
-                <td class="img-container"><img
-                        src="https://baonamdinh.vn/file/e7837c02816d130b0181a995d7ad7e96/dataimages/202201/original/images1338206_1.jpg"
-                        alt=""></td>
+            <tr v-for="item in  items ">
+                <td class="img-container"><img :src="item.src" alt=""></td>
                 <td>{{ item.name }}</td>
                 <td>{{ item.price }}đ</td>
                 <td>
@@ -13,7 +11,7 @@
                 </td>
                 <td>{{ item.price * item.quantity }}đ</td>
                 <td>
-                    <Button name="Xoa"></Button>
+                    <Button name="Xoa" @click="deleteItem(item.vegetable)"></Button>
                 </td>
             </tr>
         </table>
@@ -31,6 +29,7 @@
 // import Input from '../components/Input.vue';
 import Button from '../components/Button.vue';
 import CartService from '../services/CartService';
+import VegetableService from '../services/VegetableService';
 export default {
     components: {
         Button,
@@ -38,11 +37,7 @@ export default {
     data() {
         return {
             items: [],
-            
         }
-    },
-    props: {
-
     },
     computed: {
         totalPayment() {
@@ -57,10 +52,25 @@ export default {
             })
             return totals
         },
+        async deleteItem(id) {
+            console.log(id)
+            const res = await CartService.deleteItem(id)
+            console.log(res)
+        }
     },
     async mounted() {
         const res = await CartService.getActiveCart()
-        this.items = res.items
+        res.items.forEach(async (item) => {
+            const vegetable = await VegetableService.getVegetableById(item.vegetable)
+            this.items.push({
+                src: vegetable.imgSrc,
+                name: vegetable.name,
+                price: vegetable.price,
+                quantity: item.quantity,
+                vegetable: item.vegetable
+            })
+        })
+        // this.items = res.items
         console.log(res)
     }
 }

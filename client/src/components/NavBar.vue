@@ -1,12 +1,16 @@
 <template>
-    <nav class="nav-bar" v-if="!isShow()">   
-        <router-link :style="stylelink" class="custom link"  to="/login">Login</router-link>
-        <router-link :style="stylelink" class="custom link"  to="/register">Register</router-link>
-        <router-link :style="stylelink" to="/">Home</router-link>
-        <router-link :style="stylelink" to="/userProfile">User Profile</router-link>
-        <router-link :style="stylelink" to="/vegetables">List Vegetables</router-link>
-        <router-link :style="stylelink" to="/cart">Cart</router-link>
-        <router-link :style="stylelink" to="/history">History</router-link>
+    <nav class="nav-bar">
+        <router-link v-if="!isShow('/login')" :style="stylelink" class="custom link" to="/login">Login</router-link>
+        <router-link v-if="isShow('/logout')" :style="stylelink" class="custom link" @click="logout()" to="/logout">Log
+            out</router-link>
+        <router-link v-if="!isShow('/register')" :style="stylelink" class="custom link"
+            to="/register">Register</router-link>
+        <router-link v-if="shouldShowLink(['customer', 'admin'])" :style="stylelink" to="/">Home</router-link>
+        <router-link v-if="shouldShowLink(['customer', 'admin'])" :style="stylelink" to="/userProfile">User
+            Profile</router-link>
+        <router-link v-if="shouldShowLink(['admin'])" :style="stylelink" to="/vegetables">List Vegetables</router-link>
+        <router-link v-if="shouldShowLink(['customer'])" :style="stylelink" to="/cart">Cart</router-link>
+        <router-link v-if="shouldShowLink(['customer'])" :style="stylelink" to="/history">History</router-link>
     </nav>
 </template>
 
@@ -14,18 +18,38 @@
 export default {
     data() {
         return {
-            ListNotShow : [],
-            stylelink : "color: white; text-decoration: none; margin: 10px"
+            ListNotShow: ['/login', '/register'],
+            stylelink: "color: white; text-decoration: none; margin: 10px"
         }
     },
-    props: {
-
-    },
     computed: {
+        isLoggedIn() {
+            return this.$store.getters.isLoggedIn;
+        },
+        userRoles() {
+            return this.$store.getters.userRole;
+        }
     },
     methods: {
-        isShow() {
-            return this.ListNotShow.includes(this.$route.path);
+        isShow(path) {
+            if (this.isLoggedIn) {
+                return true;
+                // } else {
+                //     return !this.ListNotShow.includes(path);
+            }
+        },
+        shouldShowLink(requireRoles) {
+            if (!this.isLoggedIn) {
+                return false;
+            }
+            const userRole = this.userRoles
+            const check = requireRoles.includes(userRole);
+            return check
+        },
+        logout() {
+            // UserService.logout();
+            localStorage.removeItem('jwtToken');
+            this.$store.dispatch('logout');
         }
     }
 }

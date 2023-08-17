@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login.vue'
+import Logout from '../views/Logout.vue'
 import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
 import UserProfile from '../views/userProfile.vue'
@@ -25,6 +26,11 @@ const router = createRouter({
       component: Login
     },
     {
+      path: '/logout',
+      name: 'logout',
+      component: Logout
+    },
+    {
       path: '/register',
       name: 'register',
       component: Register
@@ -40,7 +46,7 @@ const router = createRouter({
       component: ListVegs,
       meta: {
         requiresAdminuth: true,
-        requiredRoles: ['admin'] 
+        requiredRoles: ['admin']
       }
     },
     {
