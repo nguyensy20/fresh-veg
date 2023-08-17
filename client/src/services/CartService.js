@@ -32,7 +32,6 @@ export default {
         const itemData = {
             "vegetable": vegetable
         }
-        console.log(itemData)
         return Api.post('/cart/remove', itemData)
     }
 }

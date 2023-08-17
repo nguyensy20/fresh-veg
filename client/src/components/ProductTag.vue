@@ -36,12 +36,12 @@ export default {
         src: String,
         name: String,
         price: Number,
-        id: String, 
+        id: String,
     },
     methods: {
         async addToCart(vegetableId, quantity) {
             console.log(vegetableId, quantity)
-            const res =await CartService.addToCart(vegetableId, quantity)
+            const res = await CartService.addToCart(vegetableId, quantity)
             console.log(res)
         }
     }
@@ -49,7 +49,6 @@ export default {
 </script>
 
 <style>
-
 .img-container {
     display: flex;
     justify-content: center;
@@ -91,4 +90,5 @@ table {
 .body {
     display: flex;
     height: 30px;
-}</style>
+}
+</style>

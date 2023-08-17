@@ -1,8 +1,7 @@
 <template>
     <div class="product-list">
-        <ProductTag v-for="veg in vegetables"
-            :src="veg['imgSrc']" :id="veg['_id']"
-            :name="veg['name']" class="tag" :price="veg['price']"></ProductTag>
+        <ProductTag v-for="veg in vegetables" :src="veg['imgSrc']" :id="veg['_id']" :name="veg['name']" class="tag"
+            :price="veg['price']"></ProductTag>
     </div>
 </template>
 

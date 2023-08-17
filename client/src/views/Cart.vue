@@ -6,7 +6,6 @@
                 <td>{{ item.name }}</td>
                 <td>{{ item.price }}đ</td>
                 <td>
-                    <!-- <input type="number "> -->
                     <input class="number" type="number" v-model="item.quantity" />
                 </td>
                 <td>{{ item.price * item.quantity }}đ</td>
@@ -53,25 +52,26 @@ export default {
             return totals
         },
         async deleteItem(id) {
-            console.log(id)
             const res = await CartService.deleteItem(id)
-            console.log(res)
+            this.items = []
+            this.fetchItems()
+        },
+        async fetchItems() {
+            const res = await CartService.getActiveCart()
+            res.items.forEach(async (item) => {
+                const vegetable = await VegetableService.getVegetableById(item.vegetable)
+                this.items.push({
+                    src: vegetable.imgSrc,
+                    name: vegetable.name,
+                    price: vegetable.price,
+                    quantity: item.quantity,
+                    vegetable: item.vegetable
+                })
+            })
         }
     },
     async mounted() {
-        const res = await CartService.getActiveCart()
-        res.items.forEach(async (item) => {
-            const vegetable = await VegetableService.getVegetableById(item.vegetable)
-            this.items.push({
-                src: vegetable.imgSrc,
-                name: vegetable.name,
-                price: vegetable.price,
-                quantity: item.quantity,
-                vegetable: item.vegetable
-            })
-        })
-        // this.items = res.items
-        console.log(res)
+        this.fetchItems()
     }
 }
 </script>
